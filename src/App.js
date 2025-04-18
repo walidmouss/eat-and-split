@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const initialFriends = [
   {
     id: 118836,
@@ -20,17 +22,55 @@ const initialFriends = [
 ];
 
 function App() {
+  const [currFriend, setCurrFriend] = useState(null);
+  function handleCurrFriend(id) {
+    setCurrFriend(id);
+  }
+
   return (
-    <div>
-      <h1>welcome to eat and split</h1>
+    <div className="app">
+      <FriendList
+        initialFriends={initialFriends}
+        currFriend={currFriend}
+        onChangeFriend={handleCurrFriend}
+      />
     </div>
   );
 }
 export default App;
 
-function FriendList() {}
+function FriendList({ initialFriends, currFriend, onChangeFriend }) {
+  return (
+    <div className="sidebar">
+      {initialFriends.map((friend) => (
+        <Friend
+          friend={friend}
+          onChangeFriend={onChangeFriend}
+          key={friend.id}
+        />
+      ))}
+    </div>
+  );
+}
 
-function Friend() {}
+function Friend({ friend, onChangeFriend }) {
+  const [owe, setOwe] = useState(0);
+  const subText =
+    owe === 0
+      ? `You and ${friend.name} are Even`
+      : owe > 0
+      ? `${friend.name} owes you ${owe}`
+      : `You owe ${friend.name} ${owe}`;
+  return (
+    <ul className="sidebar">
+      <h3>{friend.id}</h3>
+      {subText}
+      <button className="button" onClick={() => onChangeFriend(friend.id)}>
+        select
+      </button>
+    </ul>
+  );
+}
 
 function NewFriendForm() {}
 
